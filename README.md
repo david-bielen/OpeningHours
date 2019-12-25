@@ -5,7 +5,8 @@ A program that takes JSON-formatted opening hours of a restaurant as an input an
 ## How to use
 You will need python 3.8 or higher.
 
-<br/>
+
+
 ### Browser
 In a terminal, run:
 ```console
