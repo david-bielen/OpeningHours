@@ -5,15 +5,15 @@ A program that takes JSON-formatted opening hours of a restaurant as an input an
 ## How to use
 You will need python 3.8 or higher.
 
-
+<br/>
 ### Browser
 In a terminal, run:
 ```console
 python flask_app.py
 ```
-Open the URL (http://127.0.0.1:8080/) in the browser.
+Open the provided URL (commonly: http://127.0.0.1:8080/) in the browser.
 
-
+<br/><br/>
 ### Terminal
 run:
 ```console
