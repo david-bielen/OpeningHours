@@ -137,13 +137,13 @@ To avoid the above issue, a vectorized approach can be used. We only encode the 
 }
 ```
   **Output:**<br/>
-Monday: Closed
-Tuesday: Closed
-Wednesday: Closed
-Thursday: Closed
-Friday: 20:00 - 24:00
-Saturday: 00:00 - 24:00
-Sunday: 00:00 - 06:00
+Monday: Closed<br/>
+Tuesday: Closed<br/>
+Wednesday: Closed<br/>
+Thursday: Closed<br/>
+Friday: 20:00 - 24:00<br/>
+Saturday: 00:00 - 24:00<br/>
+Sunday: 00:00 - 06:00<br/>
 .
 
 
