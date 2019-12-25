@@ -220,6 +220,6 @@ class OpeningHours:
                     {
                         'error': self.error_respons
                     }
-                )
+                ) + '\n'
             else:
                 return self.error_respons
