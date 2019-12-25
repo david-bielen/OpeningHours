@@ -56,7 +56,10 @@ curl --data 'json_data={"monday":[],"tuesday":[{"type":"open","value":36000},{"t
 ```
 
 **Output:**<br/>
-{"data": "Monday: Closed\nTuesday: 10 AM - 6 PM\nWednesday: Closed\nThursday: 10 AM - 6 PM\nFriday: 10 AM - 1 AM\nSaturday: 10 AM - 1 AM\nSunday: 12 PM - 9 PM\n"}<br/>
+```javascript
+{"data": "Monday: Closed\nTuesday: 10 AM - 6 PM\nWednesday: Closed\nThursday: 10 AM - 6 PM\nFriday: 10 AM - 1 AM\nSaturday: 10 AM - 1 AM\nSunday: 12 PM - 9 PM\n"}
+```
+<br/>
 
 * Example 4 ('Accept: application/json' in header):
 ```console
