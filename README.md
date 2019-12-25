@@ -117,8 +117,7 @@ The following input would be invalid:<br/>
 }
 ```
 <br/><br/>
-
-To avoid the above issue, a vectorized approach can be used. We only encode the opening hours (in UNIX time, as above), and the duration of the open state of the restaurant, in minutes.
+To avoid the above issue, a vectorized approach can be used. We only encode the opening hours (in UNIX time, as above), and the duration of the open state of the restaurant, in minutes. This has the added benefit of a more concise encoding of opening hours.
 <br/>
 ```javascript
 {
