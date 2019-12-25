@@ -9,11 +9,12 @@ a JSON string or a web appropriate format.
 """
 
 from flask import Flask
-from logger import Logger
-from openinghours import OpeningHours
-from requestdata import RequestData
-from static import (static_schema, static_ordered_days, rendering_engines
-                    )
+from lib.requestdata import RequestData
+from lib.logger import Logger
+from lib.openinghours import OpeningHours
+from static.static_variables import (
+    static_schema, static_ordered_days, rendering_engines
+)
 
 #############
 # FLASK APP #
