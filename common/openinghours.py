@@ -3,13 +3,15 @@
 from time import gmtime
 import json
 import jsonschema  # type: ignore
-from typing import Dict, List, Union, Optional
+from typing import Dict, List, Union, Optional, TypeVar
 from time import strftime
 from common.logger import Logger
-from static.static_variables import (
-    static_schema, static_ordered_days, MainObjectType, DayElementType,
-    rendering_engines
-)
+
+
+# Type aliases
+SI = TypeVar('SI', str, int)
+DayElementType = List[Dict[str, SI]]
+MainObjectType = Dict[str, DayElementType]
 
 
 class OpeningHours:
@@ -20,20 +22,26 @@ class OpeningHours:
 
     def __init__(
         self,
-        input_string: str,
-        json_output: bool,
+        post_value_json_data: str,
+        post_value_format_of_output: str,
+        header_value_accept: str,
+        header_value_user_agent: str,
         schema: object,
-        ordered_days: list,
-        is_browser: bool
+        ordered_days: List[str],
+        rendering_engines: List[str]
     ) -> None:
-        self.input_string = input_string
-        self.json_output = json_output
+        self.post_value_json_data = post_value_json_data
+        self.post_value_format_of_output = post_value_format_of_output
+        self.header_value_accept = header_value_accept
+        self.header_value_user_agent = header_value_user_agent
         self.schema = schema
         self.ordered_days = ordered_days
         self.ordered_days_last_day_shifted = ordered_days[1:] \
             + ordered_days[:1]
-        self.is_browser = is_browser
+        self.rendering_engines = rendering_engines
         self.error_respons: str
+        self.client_is_browser = self.__client_browser()
+        self.json_out = self.__output_format_in_json()
 
     def __validate_input(self) -> bool:
         if not self.__validate_json():
@@ -50,7 +58,7 @@ class OpeningHours:
     def __validate_json(self) -> bool:
         """Verify if the input string is valid json."""
         try:
-            self.json_object: Dict = json.loads(self.input_string)
+            self.json_object: Dict = json.loads(self.post_value_json_data)
             return True
         except json.decoder.JSONDecodeError as err:
             self.error_respons = \
@@ -116,7 +124,7 @@ class OpeningHours:
         # The open-close items ordered chronologically for the whole
         # week should have alternating values (inclusive the last
         # item for the week and the first item for the week).
-        open_close_alternating_list: list = [
+        open_close_alternating_list: List[str] = [
             item['type']
             for day in self.ordered_days
             for item in self.sorted_json_object[day]
@@ -166,7 +174,7 @@ class OpeningHours:
             for item in day_items
         ).rstrip(', ')
 
-    def __organize_day_items_for_print(self) -> MainObjectType:
+    def __organize_day_items_for_output(self) -> MainObjectType:
         # If the day starts with a 'close' item, shift the item to
         # the end of the previous day (If on Monday, add it to
         # the end of Sunday).
@@ -179,10 +187,32 @@ class OpeningHours:
 
         return reset_days
 
-    def __format_hours_output(self) -> str:
+    def __client_browser(self) -> bool:
+        # Derive if the client is a browser. This will determine how a
+        # newline should be encoded ('<br \>' vs '\n'). The derivation is
+        # based on the presence of a known rendering engine in the header
+        # 'User-Agent'.
+        if self.header_value_user_agent and any(
+            rendering_engine in self.header_value_user_agent
+            for rendering_engine in self.rendering_engines
+        ):
+            return True
+        return False
+
+    def __output_format_in_json(self) -> bool:
+        # Derive if output should be in plain text or json based on the
+        # POST request (which has priority) and the 'Accept' header request
+        if self.post_value_format_of_output == 'json':
+            return True
+        if not self.post_value_format_of_output and \
+                self.header_value_accept == 'application/json':
+            return True
+        return False
+
+    def __format_output(self) -> str:
         # The string with the open and closing times is created
-        reset_days = self.__organize_day_items_for_print()
-        if self.is_browser and not self.json_output:
+        reset_days = self.__organize_day_items_for_output()
+        if self.client_is_browser and not self.json_out:
             newline = '<br />'
         else:
             newline = '\n'
@@ -199,27 +229,12 @@ class OpeningHours:
 
     def output_schedule(self) -> str:
         if self.__validate_input():
-            if self.json_output:
-                if self.is_browser:
-                    return json.dumps(
-                        {
-                            'data': self.__format_hours_output()
-                        }
-                    )
-                else:
-                    return json.dumps(
-                        {
-                            'data': self.__format_hours_output()
-                        }
-                    )
+            if self.json_out:
+                return json.dumps({'data': self.__format_output()})
             else:
-                return self.__format_hours_output()
+                return self.__format_output()
         else:
-            if self.json_output:
-                return json.dumps(
-                    {
-                        'error': self.error_respons
-                    }
-                )
+            if self.json_out:
+                return json.dumps({'error': self.error_respons})
             else:
                 return self.error_respons + '\n'

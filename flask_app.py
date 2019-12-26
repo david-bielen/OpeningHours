@@ -63,13 +63,15 @@ def home() -> str:
 
 @app.route('/api', methods=['POST'])
 def api() -> str:
-    if RequestData.get_data():
+    if RequestData.get_post_value('json_data'):
         restaurant_schedule = OpeningHours(
-            RequestData.get_data(),
-            RequestData.output_format_in_json(),
+            RequestData.get_post_value('json_data'),
+            RequestData.get_post_value('format_of_output'),
+            RequestData.get_header_value('Accept'),
+            RequestData.get_header_value('User-Agent'),
             static_schema,
             static_ordered_days,
-            RequestData.client_is_browser(rendering_engines)
+            rendering_engines
         )
         return restaurant_schedule.output_schedule()
     else:
