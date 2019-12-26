@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from typing import Dict, List, Union
+from typing import Dict, List, TypeVar
 
 # The order of the days, starting with Monday.
 static_ordered_days = [
@@ -37,5 +37,6 @@ static_schema = {
 rendering_engines = ['Gecko', 'WebKit', 'Presto', 'Trident', 'Trident']
 
 # Type aliases
-DayElementType = List[Dict[str, Union[str, int]]]
+SI = TypeVar('SI', str, int)
+DayElementType = List[Dict[str, SI]]
 MainObjectType = Dict[str, DayElementType]

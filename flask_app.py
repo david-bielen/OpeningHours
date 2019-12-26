@@ -9,12 +9,13 @@ a JSON string or a web appropriate format.
 """
 
 from flask import Flask
-from common.requestdata import RequestData
-from common.logger import Logger
-from common.openinghours import OpeningHours
 from static.static_variables import (
     static_schema, static_ordered_days, rendering_engines
 )
+from common.requestdata import RequestData
+from common.logger import Logger
+from common.openinghours import OpeningHours
+
 
 #############
 # FLASK APP #
@@ -25,7 +26,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def home() -> str:
-    json_string: str = '{"monday" : [], "tuesday" : [{"type" : "open", \
+    json_string = '{"monday" : [], "tuesday" : [{"type" : "open", \
     "value" : 36000},{"type" : "close", "value" : 64800}], "wednesday" : [],\
     "thursday" : [{"type" : "open", "value" : 36000}, {"type" :"close" \
     ,"value" : 64800}], "friday" : [{"type" : "open", "value" : 36000}], \
@@ -63,7 +64,7 @@ def home() -> str:
 @app.route('/api', methods=['POST'])
 def api() -> str:
     if RequestData.get_data():
-        restaurant_schedule: object = OpeningHours(
+        restaurant_schedule = OpeningHours(
             RequestData.get_data(),
             RequestData.output_format_in_json(),
             static_schema,

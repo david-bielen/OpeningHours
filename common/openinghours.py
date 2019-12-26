@@ -26,13 +26,13 @@ class OpeningHours:
         ordered_days: list,
         is_browser: bool
     ) -> None:
-        self.input_string: str = input_string
-        self.json_output: bool = json_output
-        self.schema: object = schema
-        self.ordered_days: List[str] = ordered_days
-        self.ordered_days_last_day_shifted: List[str] = ordered_days[1:] \
+        self.input_string = input_string
+        self.json_output = json_output
+        self.schema = schema
+        self.ordered_days = ordered_days
+        self.ordered_days_last_day_shifted = ordered_days[1:] \
             + ordered_days[:1]
-        self.is_browser: bool = is_browser
+        self.is_browser = is_browser
         self.error_respons: str
 
     def __validate_input(self) -> bool:
@@ -54,13 +54,13 @@ class OpeningHours:
             return True
         except json.decoder.JSONDecodeError as err:
             self.error_respons = \
-                f'Input is not valid JSON. {repr(err)}\n'
+                f'Input is not valid JSON. {repr(err)}'
             Logger.log_error(self.error_respons)
             return False
         except Exception as err:
             self.error_respons = (
                 f'Non-defined exception while validating JSON: '
-                f'{repr(err)}\n'
+                f'{repr(err)}'
             )
             Logger.log_error(self.error_respons)
             return False
@@ -71,13 +71,13 @@ class OpeningHours:
             jsonschema.validate(self.json_object, self.schema)
             return True
         except jsonschema.ValidationError as err:
-            self.error_respons = (f'Invalid schema: {err.message}\n')
+            self.error_respons = (f'Invalid schema: {err.message}')
             Logger.log_error(self.error_respons)
             return False
         except Exception as err:
             self.error_respons = (
                 f'Undefined exception while validating schema: '
-                f'{repr(err)}\n'
+                f'{repr(err)}'
             )
             Logger.log_error(self.error_respons)
             return False
@@ -108,7 +108,7 @@ class OpeningHours:
                     'A type -open- is found at the end of the day, '
                     'followed by an empty list for the next day, '
                     'implicating a closed day. We are missing an '
-                    'explicit -close- type.\n'
+                    'explicit -close- type.'
                 )
                 Logger.log_error(self.error_respons)
                 return False
@@ -127,7 +127,7 @@ class OpeningHours:
             self.error_respons = (
                 f'There is a missing open/close entry. '
                 f'{nr_open_close_items} item(s) found, but should be an '
-                f'even amount.\n'
+                f'even amount.'
             )
             Logger.log_error(self.error_respons)
             return False
@@ -137,7 +137,7 @@ class OpeningHours:
         ):
             self.error_respons = (
                 'Two chronologically consecutive equal type values '
-                '(open/open or close/close) found.\n'
+                '(open/open or close/close) found.'
             )
             Logger.log_error(self.error_respons)
             return False
@@ -147,8 +147,8 @@ class OpeningHours:
     def __convert_unix_to_am_pm(
             self, unix_seconds: int, item_type: str) -> str:
         # Converts a UNIX time into a 12hour clock format.
-        tail: str = ' - ' if item_type == 'open' else ', '
-        time_format: str = '%I %p' if unix_seconds % 3600 == 0 \
+        tail = ' - ' if item_type == 'open' else ', '
+        time_format = '%I %p' if unix_seconds % 3600 == 0 \
             else '%I:%M %p'
 
         return strftime(
@@ -170,7 +170,7 @@ class OpeningHours:
         # If the day starts with a 'close' item, shift the item to
         # the end of the previous day (If on Monday, add it to
         # the end of Sunday).
-        reset_days: MainObjectType = self.sorted_json_object.copy()
+        reset_days = self.sorted_json_object.copy()
         for day, previous_day in zip(
             self.ordered_days_last_day_shifted, self.ordered_days
         ):
@@ -181,7 +181,7 @@ class OpeningHours:
 
     def __format_hours_output(self) -> str:
         # The string with the open and closing times is created
-        reset_days: MainObjectType = self.__organize_day_items_for_print()
+        reset_days = self.__organize_day_items_for_print()
         if self.is_browser and not self.json_output:
             newline = '<br />'
         else:
@@ -211,7 +211,7 @@ class OpeningHours:
                         {
                             'data': self.__format_hours_output()
                         }
-                    ) + '\n'
+                    )
             else:
                 return self.__format_hours_output()
         else:
@@ -220,6 +220,6 @@ class OpeningHours:
                     {
                         'error': self.error_respons
                     }
-                ) + '\n'
+                )
             else:
-                return self.error_respons
+                return self.error_respons + '\n'

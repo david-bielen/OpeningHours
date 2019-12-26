@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import request
-from typing import List, Union
+from typing import List
 
 
 class RequestData:
@@ -10,11 +10,11 @@ class RequestData:
     """
 
     @staticmethod
-    def get_data() -> Union[str, bool]:
+    def get_data() -> str:
         if 'json_data' in request.form and request.form['json_data']:
             return request.form['json_data']
         else:
-            return False
+            return ''
 
     @staticmethod
     def output_format_in_json() -> bool:
