@@ -6,6 +6,7 @@ import jsonschema  # type: ignore
 from typing import Dict, List, TypeVar
 from time import strftime
 from common.logger import Logger  # type: ignore
+from operator import itemgetter
 
 
 # Type aliases
@@ -99,7 +100,7 @@ class OpeningHours:
         self.sorted_json_object: MainObjectType = {
             day: sorted(
                 self.json_object[day],
-                key=lambda x: x['value']
+                key=itemgetter('value')
             )
             for day in self.ordered_days
         }
