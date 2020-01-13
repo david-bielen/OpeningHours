@@ -16,7 +16,7 @@ MainObjectType = Dict[str, DayElementType]
 
 class OpeningHours:
     """A class that validates JSON input representing the opening hours
-    of a restaurant, and encodes the input into a humand readable format
+    of a restaurant, and encodes the input into a human readable format
     of the opening hours, formatted using 12-hour clock.
     """
 
