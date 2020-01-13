@@ -28,7 +28,7 @@ static_schema = {
         }
     },
     "required": static_ordered_days,
-    "maxProperties": 7
+    "maxProperties": len(static_ordered_days)
 }
 
 # rendering engines

@@ -5,7 +5,7 @@ import json
 import jsonschema  # type: ignore
 from typing import Dict, List, Union, Optional, TypeVar
 from time import strftime
-from common.logger import Logger
+from common.logger import Logger  # type: ignore
 
 
 # Type aliases
