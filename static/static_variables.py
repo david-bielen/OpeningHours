@@ -32,4 +32,4 @@ static_schema = {
 }
 
 # rendering engines
-rendering_engines = ['Gecko', 'WebKit', 'Presto', 'Trident', 'Trident']
+rendering_engines = ['Gecko', 'WebKit', 'Presto', 'Trident']
