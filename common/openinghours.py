@@ -3,7 +3,7 @@
 from time import gmtime
 import json
 import jsonschema  # type: ignore
-from typing import Dict, List, Union, Optional, TypeVar
+from typing import Dict, List, TypeVar
 from time import strftime
 from common.logger import Logger  # type: ignore
 
@@ -92,9 +92,7 @@ class OpeningHours:
 
     def __validate_open_close_order(self) -> bool:
         """Validate the order of the open/close items for the
-        whole week. A day ending with an 'open' item can not be followed by
-        an empty list for the next day, since an empty list indicates a
-        closed day.
+        whole week.
         """
 
         # Sort the entries per day chronologically.
@@ -106,6 +104,9 @@ class OpeningHours:
             for day in self.ordered_days
         }
 
+        # A day ending with an 'open' item can not be followed by
+        # an empty list for the next day, since an empty list indicates a
+        # closed day.
         for day, previous_day in zip(
                 self.ordered_days_last_day_shifted, self.ordered_days):
             if not self.sorted_json_object[day] \
@@ -129,23 +130,12 @@ class OpeningHours:
             for day in self.ordered_days
             for item in self.sorted_json_object[day]
         ]
-        if not open_close_alternating_list:
-            return True
-        if (nr_open_close_items := len(open_close_alternating_list)) % 2 != 0:
-            self.error_respons = (
-                f'There is a missing open/close entry. '
-                f'{nr_open_close_items} item(s) found, but should be an '
-                f'even amount.'
-            )
-            Logger.log_error(self.error_respons)
-            return False
         if any(i == j for i, j in zip(
             open_close_alternating_list,
             open_close_alternating_list[1:] + open_close_alternating_list[:1])
         ):
             self.error_respons = (
-                'Two chronologically consecutive equal type values '
-                '(open/open or close/close) found.'
+                'Incorrect succession of open- and close-types.'
             )
             Logger.log_error(self.error_respons)
             return False
